@@ -72,7 +72,7 @@ funCheckFolder $PATH_BLACKLISTS
 # Reach all free Feeds
 echo "Get Feodo IP Blacklist."
 # TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q https://feodotracker.abuse.ch/blocklist/?download=ipblocklist -O $PATH_DATE/ip_feodo_blocklist.txt --no-check-certificate
+$BIN_WGET -q https://feodotracker.abuse.ch/downloads/ipblocklist.txt -O $PATH_DATE/ip_feodo_blocklist.txt --no-check-certificate
 echo "ip,description" > $PATH_LIST/ip_feodo_blacklist.csv
 echo "Processing Feodo IP Blacklist ($TIMESTAMP)."
 $BIN_AWK -v var="$TIMESTAMP" '/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ { print $1 ",Feodo Tracker (" var ")" }' $PATH_DATE/ip_feodo_blocklist.txt >> $PATH_LIST/ip_feodo_blacklist.csv
@@ -88,27 +88,6 @@ while read IP_ADDRESS
 do
   echo "$IP_ADDRESS,Spamhaus ($TIMESTAMP)" >> $PATH_LIST/ip_spamhaus_blacklist.csv
 done
-
-echo "Get DShield.org Suspicious Domain List (Low Sensitivity Level)."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q https://isc.sans.edu/feeds/suspiciousdomains_Low.txt -O $PATH_DATE/domain_dshield_low_blacklist.txt --no-check-certificate
-echo "domain,description" > $PATH_LIST/domain_dshield_low_blacklist.csv
-echo "Processing DShield.org Suspicious Domain List (Low Sensitivity Level) ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9a-zA-Z\.\-]+\.[a-z]{2,10}/ { print $1 ",DShield Suspicious Domain (Low) (" var ")" }' $PATH_DATE/domain_dshield_low_blacklist.txt >> $PATH_LIST/domain_dshield_low_blacklist.csv
-
-echo "Get DShield.org Suspicious Domain List (Medium Sensitivity Level)."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q https://isc.sans.edu/feeds/suspiciousdomains_Medium.txt -O $PATH_DATE/domain_dshield_medium_blacklist.txt --no-check-certificate
-echo "domain,description" > $PATH_LIST/domain_dshield_medium_blacklist.csv
-echo "Processing DShield.org Suspicious Domain List (Medium Sensitivity Level) ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9a-zA-Z\.\-]+\.[a-z]{2,10}/ { print $1 ",DShield Suspicious Domain (Medium) (" var ")" }' $PATH_DATE/domain_dshield_medium_blacklist.txt >> $PATH_LIST/domain_dshield_medium_blacklist.csv
-
-echo "Get DShield.org Suspicious Domain List (High Sensitivity Level)."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q https://isc.sans.edu/feeds/suspiciousdomains_High.txt -O $PATH_DATE/domain_dshield_high_blacklist.txt --no-check-certificate
-echo "domain,description" > $PATH_LIST/domain_dshield_high_blacklist.csv
-echo "Processing DShield.org Suspicious Domain List (High Sensitivity Level) ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9a-zA-Z\.\-]+\.[a-z]{2,10}/ { print $1 ",DShield Suspicious Domain (High) (" var ")" }' $PATH_DATE/domain_dshield_high_blacklist.txt >> $PATH_LIST/domain_dshield_high_blacklist.csv
 
 echo "Get Emerging Threats - Known hostile or compromised hosts."
 # TIMESTAMP=$( funGetTimestamp )
@@ -131,20 +110,6 @@ $BIN_WGET -q https://sslbl.abuse.ch/blacklist/sslipblacklist.csv -O $PATH_DATE/i
 echo "ip,description" > $PATH_LIST/ip_ssl_blacklist.csv
 echo "Processing SSL Blacklist ($TIMESTAMP)."
 $BIN_AWK -v var="$TIMESTAMP" -F ',' '/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ { print $1 ",Abuse SSL IP Blacklist (dst_port:" $2 ") (" $3 ") (" var ")" }' $PATH_DATE/ip_ssl_blacklist.csv >> $PATH_LIST/ip_ssl_blacklist.csv
-
-echo "Get ZeuS Tracker - IP Blacklist."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q https://zeustracker.abuse.ch/blocklist.php?download=ipblocklist -O $PATH_DATE/ip_zeus_blocklist.txt --no-check-certificate
-echo "ip,description" > $PATH_LIST/ip_zeus_blacklist.csv
-echo "Processing ZeuS Tracker - IP Blacklist ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ { print $1 ",Abuse ZeuS IP blacklist (" var ")" }' $PATH_DATE/ip_zeus_blocklist.txt >> $PATH_LIST/ip_zeus_blacklist.csv
-
-echo "Get Malc0de - Malc0de Blacklist."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q http://malc0de.com/bl/IP_Blacklist.txt -O $PATH_DATE/ip_malc0de_blacklist.txt --no-check-certificate
-echo "ip,description" > $PATH_LIST/ip_malc0de_blacklist.csv
-echo "Processing Malc0de - Malc0de Blacklist ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ { print $1 ",Malc0de Blacklist (Malicious IP) (" var ")" }' $PATH_DATE/ip_malc0de_blacklist.txt >> $PATH_LIST/ip_malc0de_blacklist.csv
 
 echo "Get IP Blacklist from Talos Reputation Center."
 $BIN_WGET -q https://www.talosintelligence.com/documents/ip-blacklist -O $PATH_DATE/ip_talos_blacklist.txt --no-check-certificate
@@ -212,41 +177,6 @@ echo "ip,description" > $PATH_LIST/ip_blocklist_bruteforcelogin.csv
 echo "Processing Blocklist.de (BRUTE FORCE LOGIN) - IP Blacklist"
 $BIN_AWK -v var="$TIMESTAMP" '/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ { print $1 ",Blocklist.de IP Blacklist (All IPs which attacks Joomlas, Wordpress and other Web-Logins with Brute-Force Logins) (" var ")" }' $PATH_DATE/ip_blocklist_bruteforcelogin.txt >> $PATH_LIST/ip_blocklist_bruteforcelogin.csv
 
-echo "Get Ransomware Tracker - Ransomware IP Blacklist."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q https://ransomwaretracker.abuse.ch/downloads/RW_IPBL.txt -O $PATH_DATE/ip_ransomtracker_blacklist.txt --no-check-certificate
-echo "ip,description" > $PATH_LIST/ip_ransomtracker_blacklist.csv
-echo "Processing Ransomware Tracker - Ransomware IP Blacklist ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ { print $1 ",Ransomware Tracker IP Blocklist (" var ")" }' $PATH_DATE/ip_ransomtracker_blacklist.txt >> $PATH_LIST/ip_ransomtracker_blacklist.csv
-
-echo "Get Ransomware Tracker - Ransomware Domain BlAcklist."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q https://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt -O $PATH_DATE/domain_ransomtracker_blacklist.txt --no-check-certificate
-echo "domain,description" > $PATH_LIST/domain_ransomtracker_blacklist.csv
-echo "Processing Ransomware Tracker - Ransomware Domain Blacklist ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9a-zA-Z\.\-]+\.[a-z]{2,10}/ { print $1 ",Ransomware Domain Blacklist (" var ")" }' $PATH_DATE/domain_ransomtracker_blacklist.txt >> $PATH_LIST/domain_ransomtracker_blacklist.csv
-
-echo "Get Ransomware Tracker - Ransomware URL Blacklist."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q https://ransomwaretracker.abuse.ch/downloads/RW_URLBL.txt -O $PATH_DATE/url_ransomtracker_blacklist.txt --no-check-certificate
-echo "url,description" > $PATH_LIST/url_ransomtracker_blacklist.csv
-echo "Processing Ransomware Tracker - Ransomware URL Blacklist ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9a-zA-Z\.\:\/\W\S]+\.[a-z]{2,10}/ { print $1 ",Ransomware Domain Blacklist (" var ")" }' $PATH_DATE/url_ransomtracker_blacklist.txt >> $PATH_LIST/url_ransomtracker_blacklist.csv
-
-echo "Get Threatexpert.com Malicious Domains."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q http://www.networksec.org/grabbho/block.txt -O $PATH_DATE/domain_threatexpert_blacklist.txt --no-check-certificate
-echo "domain,description" > $PATH_LIST/domain_threatexpert_blacklist.csv
-echo "Processing Threatexpert.com Malicious Domain ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/^[0-9a-zA-Z\.\:\/\W\S]+\.[a-z]{2,10}/ { print $1 ",Threatexpert.com Malicious Domain (" var ")" }' $PATH_DATE/domain_threatexpert_blacklist.txt >> $PATH_LIST/domain_threatexpert_blacklist.csv
-
-echo "Get Bambenek's Feed of known, active and non-sinkholed C&Cs IP addresses."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q http://osint.bambenekconsulting.com/feeds/c2-ipmasterlist.txt -O $PATH_DATE/ip_bambeneks_blacklist.txt --no-check-certificate
-echo "ip,description" > $PATH_LIST/ip_bambeneks_blacklist.csv
-echo "Processing Bambenek's Master Feed of active C&C IP addresses ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" -F ',' '/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ { print $1 ",Bambeneks C&Cs IP addresses (Who: " $2 ") (When: " $3 ") (Detail: " $4 ") (" var ")" }' $PATH_DATE/ip_bambeneks_blacklist.txt >> $PATH_LIST/ip_bambeneks_blacklist.csv
-
 echo "Get BotScout FireHOL IP List."
 # TIMESTAMP=$( funGetTimestamp )
 $BIN_WGET -q http://botscout.com/last_caught_cache.txt -O $PATH_DATE/ip_botscout_blacklist.txt --no-check-certificate
@@ -267,13 +197,6 @@ $BIN_WGET -q http://www.ciarmy.com/list/ci-badguys.txt -O $PATH_DATE/ip_badguys_
 echo "ip,description" > $PATH_LIST/ip_badguys_blacklist.csv
 echo "Processing CI Army Bad IPs ($TIMESTAMP)."
 $BIN_AWK -v var="$TIMESTAMP" '/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/ { print $1 ",CI Army Bad IPs (" var ")" }' $PATH_DATE/ip_badguys_blacklist.txt >> $PATH_LIST/ip_badguys_blacklist.csv
-
-echo "Get Malware Domain Blacklist."
-# TIMESTAMP=$( funGetTimestamp )
-$BIN_WGET -q http://mirror1.malwaredomains.com/files/domains.txt -O $PATH_DATE/domain_malware_blacklist.txt --no-check-certificate
-echo "domain,description" > $PATH_LIST/domain_malware_blacklist.csv
-echo "Processing Malware Domain Blacklist ($TIMESTAMP)."
-$BIN_AWK -v var="$TIMESTAMP" '/[0-9a-zA-Z\.\-]+\.[a-z]{2,10}/ { print $1 ",Malware Domain Blacklist (Category: " $2 ") (Source: " $3 ") (" var ")" }' $PATH_DATE/domain_malware_blacklist.txt >> $PATH_LIST/domain_malware_blacklist.csv
 
 # Collect all feeds to one csv per type of feeds
 # TIMESTAMP=$( funGetTimestamp )
