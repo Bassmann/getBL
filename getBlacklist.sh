@@ -208,19 +208,5 @@ do
   $BIN_GREP -v "ip,description" $TABLE >> $PATH_BLACKLISTS/$FILE_IP_BLACKLIST
 done
 
-echo "domain,description" > $PATH_BLACKLISTS/$FILE_DOMAIN_BLACKLIST
-$BIN_FIND $PATH_LIST -type f -name "domain_*" | \
-while read TABLE
-do
-  $BIN_GREP -v "domain,description" $TABLE >> $PATH_BLACKLISTS/$FILE_DOMAIN_BLACKLIST
-done
-
-echo "url,description" > $PATH_BLACKLISTS/$FILE_URL_BLACKLIST
-$BIN_FIND $PATH_LIST -type f -name "url_*" | \
-while read TABLE
-do
-  $BIN_GREP -v "url,description" $TABLE >> $PATH_BLACKLISTS/$FILE_URL_BLACKLIST
-done
-
 # TIMESTAMP=$( funGetTimestamp )
 echo "End ($TIMESTAMP)."
