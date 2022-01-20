@@ -2,10 +2,15 @@
 
 I removed URLs which are no longer updated and correctd some outdated URLs.
 
+## getfullBlacklist.sh
+
+This script is unchanged from the original beside the removal of outdated sources. It downloads a list of IP addresses, URL and domains, which are suspicious or maicious.
+
 ## getBlacklist.sh
 
-This script download list of IP addresses, URL and domains, which are suspicious or maicious.
-List of sources:
+This script is a slight modification which creates a text file not a csv file and logs differently. The main change is that it only downloads the list with all attack ips from blocklist which includes the other lists from blocklist.de.
+
+## List of sources:
 
 1. **Feodo IP Blacklist**
 * https://feodotracker.abuse.ch/downloads/ipblocklist.txt
@@ -36,7 +41,7 @@ List of sources:
 14. **Blocklist.de - All IP addresses that tried to login in a SIP-, VOIP- or Asterisk-Server**
 * https://lists.blocklist.de/lists/sip.txt
 15. **Blocklist.de - Attacks attacks on the RFI-Attacks, REG-Bots, IRC-Bots or BadBots**
-https://lists.blocklist.de/lists/bots.txt
+* https://lists.blocklist.de/lists/bots.txt
 16. **Blocklist.de - All IPs which are older then 2 month and have more then 5.000 attacks**
 * https://lists.blocklist.de/lists/strongips.txt
 17. **All IPs which attacks Joomlas, Wordpress and other Web-Logins with Brute-Force Loginss**
